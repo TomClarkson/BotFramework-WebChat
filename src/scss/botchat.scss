@@ -44,6 +44,10 @@ $actionTransition: .2s cubic-bezier(0,0,.5,1);
         visibility: hidden;
     }
 
+    .wc-visible {
+        visibility: visible;
+    }
+
     .wc-header {
         background-color: $c_brand;
         box-shadow: 0 1px $c_shadow;
@@ -58,6 +62,33 @@ $actionTransition: .2s cubic-bezier(0,0,.5,1);
         right: 0;
         top: 0;
         z-index: 1;
+
+        label {
+            cursor: pointer;
+            float: right;
+        }
+
+        .wc-menu {
+            border-radius: 2px;
+            box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            word-break: break-word;
+            float: right;
+            clear: both;
+            width: 80%;
+            color: #8a8a8a;
+            background-color: #f9f9f9;
+
+            span {
+                cursor: pointer;
+                display: block;
+                margin: 5px;
+            }
+
+            span:hover {
+                color: #dbdee1;
+            }
+          }
     }
 
     .wc-time {
@@ -135,7 +166,7 @@ $actionTransition: .2s cubic-bezier(0,0,.5,1);
             top: 0;
             width: 28px;
         }
-        
+
         button.scroll:disabled {
             display: none;
         }
