@@ -17,6 +17,11 @@ export type ActivityOrID = {
     id?: string
 }
 
+export interface MenuAction {
+  label: string,
+  actions: Array<any>
+}
+
 export interface ChatProps {
     user: User,
     bot: User,
@@ -26,7 +31,8 @@ export interface ChatProps {
     selectedActivity?: BehaviorSubject<ActivityOrID>,
     sendTyping?: boolean,
     formatOptions?: FormatOptions,
-    resize?: 'none' | 'window' | 'detect'
+    resize?: 'none' | 'window' | 'detect',
+    menuActions?: Array<MenuAction>;
 }
 
 export const sendMessage = (text: string, from: User, locale: string) => ({
@@ -52,6 +58,7 @@ export const sendFiles = (files: FileList, from: User, locale: string) => ({
 import { History } from './History';
 import { MessagePane } from './MessagePane';
 import { Shell } from './Shell';
+import { Header } from './Header';
 
 export class Chat extends React.Component<ChatProps, {}> {
 
@@ -165,10 +172,7 @@ export class Chat extends React.Component<ChatProps, {}> {
 
         // only render real stuff after we know our dimensions
         let header: JSX.Element;
-        if (state.format.options.showHeader) header =
-            <div className="wc-header">
-                <span>{ state.format.strings.title }</span>
-            </div>;
+        if (state.format.options.showHeader) header = <Header actions={this.props.menuActions}/>;
 
         let resize: JSX.Element;
         if (this.props.resize === 'detect') resize =
