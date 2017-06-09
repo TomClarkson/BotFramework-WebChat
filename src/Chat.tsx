@@ -46,6 +46,16 @@ export const sendMessage = (text: string, from: User, locale: string) => ({
         timestamp: (new Date()).toISOString()
     }} as ChatActions);
 
+
+
+export const sendGeolocation = (name: string, value: any) => ({
+    type: 'Send_Message',
+    activity: {
+        type: "event",
+        name,
+        value
+    }} as ChatActions);
+
 export const sendFiles = (files: FileList, from: User, locale: string) => ({
     type: 'Send_Message',
     activity: {
@@ -82,6 +92,8 @@ export class Chat extends React.Component<ChatProps, {}> {
             type: 'Set_Locale',
             locale: props.locale || (window.navigator as any)["userLanguage"] || window.navigator.language || 'en'
         });
+
+        this.store.dispatch<ChatActions>(sendGeolocation('geolocation', 'new zealand'));
 
         if (props.formatOptions)
             this.store.dispatch<ChatActions>({ type: 'Set_Format_Options', options: props.formatOptions });
