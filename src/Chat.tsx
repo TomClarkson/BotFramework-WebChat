@@ -93,8 +93,6 @@ export class Chat extends React.Component<ChatProps, {}> {
             locale: props.locale || (window.navigator as any)["userLanguage"] || window.navigator.language || 'en'
         });
 
-        this.store.dispatch<ChatActions>(sendGeolocation('geolocation', 'new zealand'));
-
         if (props.formatOptions)
             this.store.dispatch<ChatActions>({ type: 'Set_Format_Options', options: props.formatOptions });
         if (props.sendTyping)
@@ -137,6 +135,8 @@ export class Chat extends React.Component<ChatProps, {}> {
             window.addEventListener('resize', this.resizeListener);
 
         this.store.dispatch<ChatActions>({ type: 'Start_Connection', user: this.props.user, bot: this.props.bot, botConnection, selectedActivity: this.props.selectedActivity });
+
+        this.store.dispatch<ChatActions>(sendGeolocation('geolocation', 'new zealand'));
 
         this.connectionStatusSubscription = botConnection.connectionStatus$.subscribe(connectionStatus =>
             this.store.dispatch<ChatActions>({ type: 'Connection_Change', connectionStatus })
