@@ -78,6 +78,7 @@ export class ActivityView extends React.Component<ActivityViewProps, {}> {
                 );
 
             case 'typing':
+            default:
                 return <div className="wc-typing"/>;
         }
     }
