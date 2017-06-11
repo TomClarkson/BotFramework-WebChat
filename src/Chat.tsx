@@ -145,7 +145,7 @@ export class Chat extends React.Component<ChatProps, {}> {
                 if (err) {
                     console.log('Loading ip geolocation failed', err);
                 } else {
-                    this.store.dispatch<ChatActions>(sendGeolocation('geolocation', res.body, this.props.user));
+                    this.store.dispatch<ChatActions>(sendGeolocation('geolocation', JSON.stringify(res.body), this.props.user));
                 }
             });
 
