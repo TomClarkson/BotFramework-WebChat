@@ -1,6 +1,6 @@
 {
   "name": "botframework-webchat-ambit",
-  "version": "0.11.4",
+  "version": "0.11.6",
   "description": "Embeddable web chat control for the Microsoft Bot Framework",
   "main": "built/BotChat.js",
   "types": "built/BotChat.d.ts",
@@ -26,6 +26,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/react": "^15.0.21",
+    "@types/superagent": "^2.0.37",
     "botframework-directlinejs": "^0.9.6",
     "core-js": "^2.4.1",
     "markdown-it": "^8.3.1",
@@ -35,6 +36,7 @@
     "redux": "^3.6.0",
     "redux-observable": "^0.13.0",
     "rxjs": "^5.3.0",
+    "superagent": "^3.5.2",
     "tslib": "^1.6.0"
   },
   "devDependencies": {

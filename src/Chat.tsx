@@ -8,6 +8,8 @@ import { Activity, Media, IBotConnection, User, MediaType, DirectLine, DirectLin
 import { createStore, ChatActions } from './Store';
 import { Provider } from 'react-redux';
 
+import * as request from 'superagent';
+
 export interface FormatOptions {
     showHeader?: boolean
 }
@@ -48,12 +50,13 @@ export const sendMessage = (text: string, from: User, locale: string) => ({
 
 
 
-export const sendGeolocation = (name: string, value: any) => ({
+export const sendGeolocation = (name: string, value: any, from: User) => ({
     type: 'Send_Message',
     activity: {
         type: "event",
         name,
-        value
+        value,
+        from
     }} as ChatActions);
 
 export const sendFiles = (files: FileList, from: User, locale: string) => ({
@@ -136,7 +139,15 @@ export class Chat extends React.Component<ChatProps, {}> {
 
         this.store.dispatch<ChatActions>({ type: 'Start_Connection', user: this.props.user, bot: this.props.bot, botConnection, selectedActivity: this.props.selectedActivity });
 
-        this.store.dispatch<ChatActions>(sendGeolocation('geolocation', 'new zealand'));
+        request
+            .get('https://ipinfo.io/json')
+            .end((err: any, res: any) => {
+                if (err) {
+                    console.log('Loading ip geolocation failed', err);
+                } else {
+                    this.store.dispatch<ChatActions>(sendGeolocation('geolocation', res.body, this.props.user));
+                }
+            });
 
         this.connectionStatusSubscription = botConnection.connectionStatus$.subscribe(connectionStatus =>
             this.store.dispatch<ChatActions>({ type: 'Connection_Change', connectionStatus })
