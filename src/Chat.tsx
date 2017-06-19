@@ -48,10 +48,8 @@ export const sendMessage = (text: string, from: User, locale: string) => ({
         timestamp: (new Date()).toISOString()
     }} as ChatActions);
 
-
-
 export const sendGeolocation = (name: string, value: any, from: User) => ({
-    type: 'Send_Message',
+    type: 'Send_Geolocation',
     activity: {
         type: "event",
         name,

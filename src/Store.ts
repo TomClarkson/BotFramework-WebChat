@@ -192,13 +192,13 @@ export interface HistoryState {
 }
 
 export type HistoryAction = {
-    type: 'Receive_Message' | 'Send_Message' | 'Show_Typing' | 'Receive_Sent_Message'
+    type: 'Receive_Message' | 'Send_Message' | 'Show_Typing' | 'Receive_Sent_Message' | 'Send_Geolocation'
     activity: Activity
 } | {
-    type: 'Send_Message_Try' | 'Send_Message_Fail' | 'Send_Message_Retry',
+    type: 'Send_Message_Try' | 'Send_Message_Fail' | 'Send_Message_Retry' | 'Send_Geolocation_Fail',
     clientActivityId: string
 } | {
-    type: 'Send_Message_Succeed'
+    type: 'Send_Message_Succeed' | 'Send_Geolocation_Succeed'
     clientActivityId: string
     id: string
 } | {
@@ -390,6 +390,20 @@ import 'rxjs/add/operator/throttleTime';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/of';
 
+const sendGeolocation: Epic<ChatActions, ChatState> = (action$, store) =>
+    action$.ofType('Send_Geolocation')
+    .flatMap(action => {
+        const state = store.getState();
+        const activity = action.activity;
+        if (!activity) {
+            konsole.log("trySendMessage: activity not found");
+            return Observable.empty<HistoryAction>();
+        }
+
+        return state.connection.botConnection.postActivity(activity)
+        .map(id => ({ type: 'Send_Geolocation_Succeed', clientActivityId: 'geolocation', id } as HistoryAction))
+        .catch(error => Observable.of({ type: 'Send_Geolocation_Fail', clientActivityId: 'geolocation' } as HistoryAction))
+    });
 
 const sendMessage: Epic<ChatActions, ChatState> = (action$, store) =>
     action$.ofType('Send_Message')
