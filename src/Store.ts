@@ -482,6 +482,7 @@ export const createStore = () =>
             history
         }),
         applyMiddleware(createEpicMiddleware(combineEpics(
+            sendGeolocation,
             updateSelectedActivity,
             sendMessage,
             trySendMessage,
