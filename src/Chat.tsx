@@ -7,6 +7,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { Activity, Media, IBotConnection, User, MediaType, DirectLine, DirectLineOptions, CardActionTypes } from 'botframework-directlinejs';
 import { createStore, ChatActions } from './Store';
 import { Provider } from 'react-redux';
+import { SpeechOptions } from './SpeechOptions';
+import { Speech } from './SpeechModule';
 
 import * as request from 'superagent';
 
@@ -29,6 +31,7 @@ export interface ChatProps {
     bot: User,
     botConnection?: IBotConnection,
     directLine?: DirectLineOptions,
+    speechOptions?: SpeechOptions,
     locale?: string,
     selectedActivity?: BehaviorSubject<ActivityOrID>,
     sendTyping?: boolean,
@@ -96,14 +99,19 @@ export class Chat extends React.Component<ChatProps, {}> {
 
         if (props.formatOptions)
             this.store.dispatch<ChatActions>({ type: 'Set_Format_Options', options: props.formatOptions });
+
         if (props.sendTyping)
             this.store.dispatch<ChatActions>({ type: 'Set_Send_Typing', sendTyping: props.sendTyping });
+
+        if (props.speechOptions) {
+            Speech.SpeechRecognizer.setSpeechRecognizer(props.speechOptions.speechRecognizer);
+            Speech.SpeechSynthesizer.setSpeechSynthesizer(props.speechOptions.speechSynthesizer);
+        }
     }
 
     private handleIncomingActivity(activity: Activity) {
         let state = this.store.getState();
         switch (activity.type) {
-
             case "message":
                 this.store.dispatch<ChatActions>({ type: activity.from.id === state.connection.user.id ? 'Receive_Sent_Message' : 'Receive_Message', activity });
                 break;
@@ -147,8 +155,14 @@ export class Chat extends React.Component<ChatProps, {}> {
                 }
             });
 
-        this.connectionStatusSubscription = botConnection.connectionStatus$.subscribe(connectionStatus =>
-            this.store.dispatch<ChatActions>({ type: 'Connection_Change', connectionStatus })
+        this.connectionStatusSubscription = botConnection.connectionStatus$.subscribe(connectionStatus =>{
+                if(this.props.speechOptions && this.props.speechOptions.speechRecognizer){
+                    let refGrammarId = botConnection.referenceGrammarId;
+                    if(refGrammarId)
+                        this.props.speechOptions.speechRecognizer.referenceGrammarId = refGrammarId;
+                }
+                this.store.dispatch<ChatActions>({ type: 'Connection_Change', connectionStatus })
+            }
         );
 
         this.activitySubscription = botConnection.activity$.subscribe(
