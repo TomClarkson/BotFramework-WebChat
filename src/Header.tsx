@@ -54,6 +54,7 @@ class HeaderContainer extends React.Component<Props, State> {
       : <span/>
     return (
       <div className="wc-header">
+        <span>HELLO</span>
         <span>{ this.props.title }</span>
         {menuIcon}
         {menu}
