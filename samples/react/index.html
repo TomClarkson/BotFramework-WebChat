@@ -27,6 +27,22 @@
         position: relative;
         width: 620px;
       }
+
+      /* squirrel */
+      .wc-header {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .wc-message-from-bot .wc-message-content {
+        display: inline-block;
+        margin-left: 15px;
+      }
+
+      .wc-message-bot-avatar {
+        height: 20px;
+        width: 20px;
+      }
     </style>
 
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
@@ -45,15 +61,13 @@
 
       ReactDOM.render(
         <BotChat.Chat
+          avatar='https://c758759.ssl.cf2.rackcdn.com/large/230120.jpg'
+          directLine={{ secret: 'Fxsd9eCVCHA.cwA.dao.A4Dm51m8dSdDGUjODoScwz3Cx6sWPbBlmpYALV6VXJQ' }}
+          customHeaderToolbox={<div onClick={() => console.log('minimise')}>MINIMISE</div>}
+          headerText='Chat with Alan'
           bot={{
             id: params.botid || 'botid',
             name: params.botname || 'botname'
-          }}
-          directLine={{
-            domain: params.domain,
-            secret: params.s,
-            token: params.t,
-            webSocket: params.webSocket && params.webSocket === 'true' // defaults to true
           }}
           locale={ params.locale }
           resize="detect"
